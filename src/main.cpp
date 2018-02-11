@@ -52,6 +52,8 @@ void setup() {
 	Wire.setClockStretchLimit(2000);
 	delay(100);  // settle I2C
 
+	TouchCtrl::printSerial.setDefaultValue(false);
+	touch.setSerialPrintData(TouchCtrl::printSerial.get());
 	// Initialize Homie
 	Homie_setFirmware(FW_NAME, FW_VERSION);
 	Homie.disableLedFeedback();
@@ -77,14 +79,14 @@ void setup() {
 	thermo.setOnTempChangedFct([](int16_t newTemp) {atm_disp.show_settemp();});
 	thermo.setOnModeChangedFct([](ThermostatNode::EThermostatMode mode) {atm_disp.redraw();});
 
-	sensor.setTempAdjust(-3.3);
 	touch.setup();
-	//touch.setSerialPrintData(true); // Trace Touchdata to Serial ## TODO: Use HomieSetting
-	// --> Connect buttons as input for state machine
-	//     - no debounce needed for touch (touch controller already has hysteresis)
-	//     - UP and DOWN button can repeat
-	//     - Connect Button to corresponding events of atm_disp state machine
-	//     - trace state transition to Serial
+
+	/* --> Connect buttons as inputs for state machine
+	 *     - no debounce needed for touch (touch controller already has hysteresis)
+	 *     - UP and DOWN button can repeat
+	 *     - Connect Button to corresponding events of atm_disp state machine
+	 *     - trace state transition to Serial
+	 */
 	button_up.begin(BUT_UP).debounce(0).repeat(500, 333).onPress(atm_disp, Atm_DisplayMode::EVT_BUT_UP).trace(Serial);
 	button_down.begin(BUT_DOWN).debounce(0).repeat(500, 333).onPress(atm_disp, Atm_DisplayMode::EVT_BUT_DOWN).trace(Serial);
 	button_left.begin(BUT_LEFT).debounce(0).onPress(atm_disp, Atm_DisplayMode::EVT_BUT_LEFT).trace(Serial);

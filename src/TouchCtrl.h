@@ -8,6 +8,7 @@
 #ifndef SRC_TOUCHCTRL_H_
 #define SRC_TOUCHCTRL_H_
 
+#include "Homie.hpp"
 #include "OLEDFrame.h"
 #include "OLEDStatusIndicator.h"
 
@@ -24,6 +25,7 @@ public:
 		serialPrintData = on;
 	}
 
+	static HomieSetting<bool> printSerial;
 private:
 	void readRawInputs();
 	bool serialPrintData;

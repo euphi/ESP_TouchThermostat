@@ -8,10 +8,17 @@
 #include "TouchCtrl.h"
 #include "MPR121.h"
 
+
+HomieSetting<bool> TouchCtrl::printSerial ("Print touch data", "flag, if to print raw touch data to Serial");
+
 TouchCtrl::TouchCtrl(): serialPrintData(false) {
+	Serial.println(__PRETTY_FUNCTION__);
+	//printSerial.setDefaultValue(false);
 }
 
 void TouchCtrl::setup() {
+	printSerial.setDefaultValue(true);
+
 	    if(!MPR121.begin(MPR121_I2C_ADDRESS)){
 	      Serial.println("error setting up MPR121");
 	      switch(MPR121.getError()){

@@ -2222,6 +2222,7 @@
 		<configuration configurationName="Default">
 			<resource resourceType="PROJECT" workspacePath="/esp07"/>
 		</configuration>
+		<configuration configurationName="Debug"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
