@@ -1,0 +1,20 @@
+{
+        "name": "Labor",
+        "device_id": "lab_thermo",
+        "wifi": {
+                "ssid": "WiFi-SSID",
+                "password": "T0pS3cr3T!"
+        },
+        "mqtt": {
+                "host": "mqtt-host",
+                "port": 1883,
+                "base_topic": "homie/",
+                "auth": false
+        },
+        "ota": {
+                "enabled": true
+        },
+        "settings": {
+
+        }
+}
