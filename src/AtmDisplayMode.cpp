@@ -11,9 +11,9 @@
 /* Add optional parameters for the state machine to begin()
  * Add extra initialization code
  */
-Atm_DisplayMode::Atm_DisplayMode(const SensorNode & sens, const ThermostatNode& therm, LedMatrixNode& _matrix):
+Atm_DisplayMode::Atm_DisplayMode(const SensorNode & sens, const ThermostatNode& therm, LedRingNode& _ring):
 		Machine(),
-		matrix(_matrix),
+		ledring(_ring),
 		sensor(sens),
 		thermNode(therm),
 		cur_time(9999)
@@ -74,61 +74,51 @@ void Atm_DisplayMode::setCurTime(int16_t curTime) {
 	redraw();
 }
 
-void Atm_DisplayMode::show4DigitNumber(int16_t number, bool use3digit) {
-	if (number >= 10000 || number < 0 || (use3digit && number >= 1000)) {
-		return;
-	}
-	uint8_t n_ten = number / 1000;
-	uint8_t n_one = (number % 1000) / 100;
-	uint8_t n_dec = (number % 100) / 10;
-	uint8_t n_cen = (number % 10);
-	if (use3digit) matrix.showDigits(n_one, n_dec, -1, n_cen);
-	else matrix.showDigits(n_ten, n_one, n_dec, n_cen);
-}
-
 void Atm_DisplayMode::drawModePixel() {
 	uint16_t c = 0;
 	switch (thermNode.getMode()) {
 	case ThermostatNode::Auto_ON:
-		c = NEO_RED;
+		c = CRGB::Red;
 		break;
 	case ThermostatNode::Auto_OFF:
-		c = NEO_GREEN;
+		c = CRGB::Green;
 		break;
 	case ThermostatNode::Manual_ON:
-		c = NEO_RED + NEO_GREEN;  // --> yellow
+		c = CRGB::Yellow;  // --> yellow
 		break;
 	case ThermostatNode::Manual_OFF:
-		c = NEO_BLUE;
+		c = CRGB::Blue;
 		break;
 	}
-	matrix.getMatrix().drawPixel(0,7,c);
+	LedRingNode::RingCRGB& ring = ledring.getLEDs();
+	//TOODO:matrix.getMatrix().drawPixel(0,7,c);
 }
 
 void Atm_DisplayMode::showTime() {
-	matrix.setColorUp(NEO_GREEN);
-	matrix.setColorDn(NEO_BLUE);
-	show4DigitNumber(cur_time);
+	//TODO:matrix.setColorUp(CRGB::Green);
+	//TODO:matrix.setColorDn(CRGB::Blue);
+	//TODO: show4DigitNumber(cur_time);
 	drawModePixel();
-	matrix.getMatrix().show();
+	ledring.redraw();
+	//TODO: matrix.getMatrix().show();
 }
 
 void Atm_DisplayMode::showSetTemp() {
-	matrix.setColorUp(NEO_RED);
-	matrix.setColorDn(NEO_BLUE);
+//TODO:	matrix.setColorUp(CRGB::Red);
+//	matrix.setColorDn(CRGB::Blue);
 	int16_t temp_dC = thermNode.getSetTemp();
-	show4DigitNumber(temp_dC, true);
+	//TODO: show4DigitNumber(temp_dC, true);
 	drawModePixel();
-	matrix.getMatrix().show();
+	ledring.redraw();
 }
 
 void Atm_DisplayMode::showTemp() {
-	matrix.setColorUp(NEO_GREEN);
-	matrix.setColorDn(NEO_RED);
+	//matrix.setColorUp(CRGB::Green);
+	//matrix.setColorDn(CRGB::Red);
 	int16_t temp_dC = rint(sensor.getTemperatur() * 10);
-	show4DigitNumber(temp_dC, true);
+	//TODO: show4DigitNumber(temp_dC, true);
 	drawModePixel();
-	matrix.getMatrix().show();
+	//TODO:matrix.getMatrix().show();
 }
 
 /* Override the default trigger() method

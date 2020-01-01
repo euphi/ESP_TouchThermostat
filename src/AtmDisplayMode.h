@@ -11,14 +11,14 @@
 
 #include <SensorNode.h>
 #include <ThermostatNode.h>
-#include <LedMatrixNode.h>
+#include <LedRingNode.h>
 
 class Atm_DisplayMode: public Machine {
 
  public:
   enum { SHOW_TIME, SHOW_TEMP, SET_TEMP }; // STATES
   enum { EVT_REDRAW, EVT_SHOW_SETTEMP, EVT_TIMEOUT, EVT_BUT_DOWN, EVT_BUT_UP, EVT_BUT_RIGHT, EVT_BUT_LEFT, ELSE }; // EVENTS  Atm_DisplayMode( const SensorNode & sens, const ThermostatNode& therm, LedMatrixNode& _matrix);
-  Atm_DisplayMode( const SensorNode & sens, const ThermostatNode& therm, LedMatrixNode& _matrix);
+  Atm_DisplayMode( const SensorNode & sens, const ThermostatNode& therm, LedRingNode& _ring);
   Atm_DisplayMode& begin( void );
   Atm_DisplayMode& trace( Stream & stream );
   Atm_DisplayMode& trigger( int event );
@@ -37,9 +37,6 @@ class Atm_DisplayMode: public Machine {
 
   enum  ETouchButton {BUT_DOWN = 0 , BUT_LEFT, BUT_UP, BUT_RIGHT, BUT_ENTER}; // PINout of Touchcontroller
 
-  #define NEO_RED Adafruit_NeoMatrix::Color(255,0,0)
-  #define NEO_GREEN Adafruit_NeoMatrix::Color(0,255,0)
-  #define NEO_BLUE Adafruit_NeoMatrix::Color(0,0,255)
 
   int event( int id );
   void action( int id );
@@ -47,14 +44,13 @@ class Atm_DisplayMode: public Machine {
   void showTime();
   void showTemp();
   void showSetTemp();
-  void show4DigitNumber(int16_t number, bool use3digit = false);
   void drawModePixel();
 
   atm_timer_millis /*timer_redraw,*/ timer_state_timeout;
 
   const SensorNode & sensor;
   const ThermostatNode & thermNode;
-  LedMatrixNode& matrix;
+  LedRingNode& ledring;
   int16_t cur_time;
 };
 

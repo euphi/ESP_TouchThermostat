@@ -7,7 +7,7 @@
 
 // own extensions
 #include "ThermostatNode.h" // MQTT (Homie) connection for Thermostat
-#include "LedMatrixNode.h"	// MQTT (Homie) control for 8x8 Matrix (brightness, color)
+#include "LedRingNode.h"	// MQTT (Homie) control for 8x8 Matrix (brightness, color)
 #include "TouchCtrl.h"		// MPR121 Touch Interface
 #include "AtmDisplayMode.h"	// Display State Machine (Automaton)
 #include "AtmTouchButton.h" // Automaton Button for Touch Input
@@ -15,7 +15,7 @@
 
 /* Magic sequence for Autodetectable Binary Upload */
 #define FW_NAME "ESP_TouchThermostat"
-#define FW_VERSION "0.9.0"
+#define FW_VERSION "0.9.5"
 
 const char *__FLAGGED_FW_NAME = "\xbf\x84\xe4\x13\x54" FW_NAME "\x93\x44\x6b\xa7\x75";
 const char *__FLAGGED_FW_VERSION = "\x6a\x3f\x3e\x0e\xe1" FW_VERSION "\xb0\x30\x48\xd4\x1a";
@@ -24,13 +24,13 @@ const char *__FLAGGED_FW_VERSION = "\x6a\x3f\x3e\x0e\xe1" FW_VERSION "\xb0\x30\x
 
 // ****** HomieNodes ******
 SensorNode sensor;
-LedMatrixNode matrixNode;
+LedRingNode ringNode;
 ThermostatNode thermo;
 
 
 // ****** own controller objects ******
 TouchCtrl touch;  // TODO: Make this class a singleton and reference it in Atm_TouchButton only
-Atm_DisplayMode atm_disp(sensor, thermo, matrixNode);  // State machine for LED matrix
+Atm_DisplayMode atm_disp(sensor, thermo, ringNode);  // State machine for LED matrix
 
 // ****** own input elements ******
 Atm_TouchButton button_up;
