@@ -26,7 +26,7 @@ const char *__FLAGGED_FW_VERSION = "\x6a\x3f\x3e\x0e\xe1" FW_VERSION "\xb0\x30\x
 SensorNode sensor;
 LedMatrixNode matrixNode;
 ThermostatNode thermo;
-
+LoggerNode LN;
 
 // ****** own controller objects ******
 TouchCtrl touch;  // TODO: Make this class a singleton and reference it in Atm_TouchButton only
@@ -52,8 +52,6 @@ void setup() {
 	Wire.setClockStretchLimit(2000);
 	delay(100);  // settle I2C
 
-	TouchCtrl::printSerial.setDefaultValue(false);
-	touch.setSerialPrintData(TouchCtrl::printSerial.get());
 	// Initialize Homie
 	Homie_setFirmware(FW_NAME, FW_VERSION);
 	Homie.disableLedFeedback();
@@ -68,6 +66,11 @@ void setup() {
 	});
 	Homie.setup();
 
+	TouchCtrl::printSerial.setDefaultValue(false);
+	touch.setSerialPrintData(TouchCtrl::printSerial.get());
+	Serial.print("PrintTouch: ");
+	Serial.println(TouchCtrl::printSerial.get() ? "true":"false");
+	touch.setSerialPrintData(true);
 	// Initialize State Machine
 	atm_disp.begin();				// Initialize main display state machine
 	atm_disp.trace(Serial);			// Trace State transitions to Serial

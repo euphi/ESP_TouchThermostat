@@ -47,9 +47,7 @@ protected:
 //	  virtual void setup() {}
 //	  virtual void loop() {}
 //	  virtual void onReadyToOperate() {}
-	virtual bool handleInput(const String& property, const HomieRange& range,
-			const String& value);
-
+	virtual bool handleInput(const HomieRange& range, const String& property, const String& value) override;
 
 };
 

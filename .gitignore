@@ -1,8 +1,7 @@
-.pioenvs
-.piolibdeps
+.pio
 .clang_complete
 .gcc-flags.json
-.vscode/c_cpp_properties.json
-.vscode/launch.json
-.vscode/settings.json
+.vscode
+.settings
 lib/
+data/homie/config.json

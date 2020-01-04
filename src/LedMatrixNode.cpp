@@ -10,7 +10,7 @@
 
 
 LedMatrixNode::LedMatrixNode():
-	HomieNode("LED-Matrix", "led_bright"),
+	HomieNode("ledmatrix", "LED-Matrix", "led_bright"),
 	matrix(8, 8, 12,
 	       NEO_MATRIX_TOP + NEO_MATRIX_RIGHT + NEO_MATRIX_COLUMNS + NEO_MATRIX_PROGRESSIVE,
 		   NEO_GRB + NEO_KHZ800),
@@ -47,8 +47,7 @@ void LedMatrixNode::setup() {
 void LedMatrixNode::onReadyToOperate() {
 }
 
-bool LedMatrixNode::handleInput(const String& property, const HomieRange& range,
-		const String& value) {
+bool LedMatrixNode::handleInput(const HomieRange& range, const String& property, const String& value) {
 	if (property.equals("brightness")) {
 		int8_t new_br = value.toInt();
 		matrix.setBrightness(new_br);

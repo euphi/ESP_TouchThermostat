@@ -9,8 +9,6 @@
 #define SRC_TOUCHCTRL_H_
 
 #include "Homie.hpp"
-#include "OLEDFrame.h"
-#include "OLEDStatusIndicator.h"
 
 #define MPR121_I2C_ADDRESS 0x5A // 0x5A - 0x5D
 

@@ -23,7 +23,8 @@ public:
 	virtual void setup() override;
 	//virtual void loop() override; // loop() not necessary
 	virtual void onReadyToOperate() override;
-	virtual bool handleInput(const String  &property, const HomieRange& range, const String &value) override;
+	virtual bool handleInput(const HomieRange& range, const String& property, const String& value) override;
+
 	void showDigits(int8_t uTen = -1, int8_t uOne = -1, int8_t lTen = -1, int8_t lOne = -1);
 
 	void setColorDn(uint16_t colorDn) {

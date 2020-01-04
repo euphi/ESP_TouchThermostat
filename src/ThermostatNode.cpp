@@ -9,7 +9,7 @@
 #include <LoggerNode.h>
 
 ThermostatNode::ThermostatNode():
-	HomieNode("Thermostat", "thermostat"),
+	HomieNode("thermostat", "Thermostat", "thermostat"),
 	setTemp(225),
 	mode(Auto_OFF)
 {
@@ -21,7 +21,7 @@ ThermostatNode::ThermostatNode():
 	advertise("Mode").settable();
 }
 
-bool ThermostatNode::handleInput(const String& property, const HomieRange& range, const String &value) {
+bool ThermostatNode::handleInput(const HomieRange& range, const String& property, const String& value) {
 	if (property.equals("SetTemp"))
 	{
 		float newSetTemp = value.toFloat();

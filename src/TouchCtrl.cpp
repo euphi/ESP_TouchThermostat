@@ -9,16 +9,13 @@
 #include "MPR121.h"
 
 
-HomieSetting<bool> TouchCtrl::printSerial ("Print touch data", "flag, if to print raw touch data to Serial");
+HomieSetting<bool> TouchCtrl::printSerial ("PrintTouch", "flag, if to print raw touch data to Serial");
 
-TouchCtrl::TouchCtrl(): serialPrintData(false) {
+TouchCtrl::TouchCtrl(): serialPrintData(true) {
 	Serial.println(__PRETTY_FUNCTION__);
-	//printSerial.setDefaultValue(false);
 }
 
 void TouchCtrl::setup() {
-	printSerial.setDefaultValue(true);
-
 	    if(!MPR121.begin(MPR121_I2C_ADDRESS)){
 	      Serial.println("error setting up MPR121");
 	      switch(MPR121.getError()){
@@ -52,14 +49,24 @@ void TouchCtrl::setup() {
 
 	    // this is the touch threshold - setting it low makes it more like a proximity trigger
 	    // default value is 40 for touch
-	    MPR121.setTouchThreshold(25);
+	    MPR121.setTouchThreshold(40);
 
 	    // this is the release threshold - must ALWAYS be smaller than the touch threshold
 	    // default value is 20 for touch
-	    MPR121.setReleaseThreshold(15);
+	    MPR121.setReleaseThreshold(30);
 
 	    MPR121.setProxMode(PROX0_3);
-	    delay(1000);
+
+//	    MPR121_settings_t settings;
+//	    settings.ECR = 0xCC;		//Auto-Config
+//	    settings.ACCR0 = 0x3F;		//Auto-Config
+//
+//		//settings.ACCR1 = 0x80;
+//		settings.USL = 0x80;			//Upper Limit
+//		settings.TL =  0x70;			//Target Limit
+//		settings.LSL = 0x40;			//Lower Limit
+//		MPR121.applySettings(&settings);
+//	    delay(1000);
 
 	    // initial data update
 	    MPR121.updateTouchData();
@@ -79,7 +86,7 @@ void TouchCtrl::readRawInputs(){
     MPR121.updateFilteredData();
 
 	if (serialPrintData) {
-		Serial.print(MPR121.getError());
+		Serial.printf("Error %x: OORS1: %x\tOORS2: %x\n", MPR121.getError(), MPR121.getRegister(MPR121_OORS1), MPR121.getRegister(MPR121_OORS2));
 		Serial.print("TOUCH: ");
 		for (uint_fast8_t i = 0; i < 13; i++) {          // 13 touch values
 			Serial.print(MPR121.getTouchData(i), DEC);
