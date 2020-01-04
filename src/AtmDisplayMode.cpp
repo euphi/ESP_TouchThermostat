@@ -6,6 +6,7 @@
  */
 
 #include <AtmDisplayMode.h>
+#include <LoggerNode.h>
 #include "MPR121.h"
 
 /* Add optional parameters for the state machine to begin()
@@ -13,9 +14,9 @@
  */
 Atm_DisplayMode::Atm_DisplayMode(const SensorNode & sens, const ThermostatNode& therm, LedMatrixNode& _matrix):
 		Machine(),
-		matrix(_matrix),
 		sensor(sens),
 		thermNode(therm),
+		matrix(_matrix),
 		cur_time(9999)
 {
 	//timer_redraw.set(5000);
@@ -101,6 +102,9 @@ void Atm_DisplayMode::drawModePixel() {
 	case ThermostatNode::Manual_OFF:
 		c = NEO_BLUE;
 		break;
+	default:
+		LN.logf(__PRETTY_FUNCTION__, LoggerNode::ERROR, "Unknown thermostat mode");
+
 	}
 	matrix.getMatrix().drawPixel(0,7,c);
 }
