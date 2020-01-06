@@ -26,6 +26,9 @@ public:
 	static HomieSetting<bool> printSerial;
 private:
 	void readRawInputs();
+	void LogTouchDataToSerial();
+	void LogTouchData();
+
 	bool serialPrintData;
 };
 

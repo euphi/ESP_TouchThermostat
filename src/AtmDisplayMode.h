@@ -13,7 +13,7 @@
 #include <ThermostatNode.h>
 #include <LedMatrixNode.h>
 
-class Atm_DisplayMode: public Machine {
+class Atm_DisplayMode: public Machine { // @suppress("Class has a virtual method and non-virtual destructor")
 
  public:
   enum { SHOW_TIME, SHOW_TEMP, SET_TEMP }; // STATES
@@ -29,6 +29,7 @@ class Atm_DisplayMode: public Machine {
   Atm_DisplayMode& redraw( void );
   Atm_DisplayMode& show_settemp( void );
   void setCurTime(int16_t curTime);
+  void setActTemp(float actTemp);
   
  private:
   enum { ENT_SHOW_TIME, ENT_SHOW_TEMP, ENT_SET_TEMP }; // ACTIONS

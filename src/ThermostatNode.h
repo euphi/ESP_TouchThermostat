@@ -15,20 +15,26 @@ class ThermostatNode: public HomieNode {
 public:
 	enum EThermostatMode {Manual_ON = 0, Manual_OFF, Auto_ON, Auto_OFF, LAST};
 private:
+	// Data format is fixed point (1 bit = 1/10)
 	int16_t setTemp;
+	int16_t	actTemp;
 	void updateSetTemp();
+	void updateActTemp();
 
 	const String mode_id[LAST] = { "Manual_ON", "Manual_OFF", "Auto_ON", "Auto_OFF" };
 	EThermostatMode mode;
+	String modeFormat;
 
 	void updateMode();
 
-	std::function<void(int16_t temp)> onTempChangedFct;
+	std::function<void(int16_t temp)> onSetTempChangedFct;
+	std::function<void(int16_t temp)> onActTempChangedFct;
 	std::function<void(EThermostatMode mode)> onModeChangedFct;
 
 public:
 	ThermostatNode();
 	int16_t getSetTemp() const {return setTemp;}
+	int16_t getActTemp() const {return actTemp;}
 	EThermostatMode getMode() const {return mode;}
 	void increase() {
 		setTemp += 1;
@@ -40,7 +46,8 @@ public:
 	}
 
 	void setOnModeChangedFct(std::function<void(EThermostatMode mode)> onModeChangedFct);
-	void setOnTempChangedFct(std::function<void(int16_t temp)> onTempChangedFct);
+	void setOnSetTempChangedFct(std::function<void(int16_t temp)> onSetTempChangedFct);
+	void setOnActTempChangedFct(std::function<void(int16_t temp)> onActTempChangedFct);
 
 
 protected:

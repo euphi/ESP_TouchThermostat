@@ -70,11 +70,6 @@ void Atm_DisplayMode::action( int id ) {
   }
 }
 
-void Atm_DisplayMode::setCurTime(int16_t curTime) {
-	cur_time = curTime;
-	redraw();
-}
-
 void Atm_DisplayMode::show4DigitNumber(int16_t number, bool use3digit) {
 	if (number >= 10000 || number < 0 || (use3digit && number >= 1000)) {
 		return;
@@ -129,7 +124,9 @@ void Atm_DisplayMode::showSetTemp() {
 void Atm_DisplayMode::showTemp() {
 	matrix.setColorUp(NEO_GREEN);
 	matrix.setColorDn(NEO_RED);
-	int16_t temp_dC = rint(sensor.getTemperatur() * 10);
+//	int16_t temp_dC = rint(sensor.getTemperatur() * 10);
+//	show4DigitNumber(temp_dC, true);
+	int16_t temp_dC = thermNode.getActTemp();
 	show4DigitNumber(temp_dC, true);
 	drawModePixel();
 	matrix.getMatrix().show();
@@ -170,6 +167,11 @@ Atm_DisplayMode& Atm_DisplayMode::show_settemp() {
   return *this;
 }
 
+void Atm_DisplayMode::setCurTime(int16_t curTime) {
+	cur_time = curTime;
+	redraw();
+}
+
 /*
  * onDec() push connector variants ( slots 1, autostore 0, broadcast 0 )
  */
@@ -207,4 +209,3 @@ Atm_DisplayMode& Atm_DisplayMode::trace( Stream & stream ) {
     "DISPLAYMODE\0EVT_REDRAW\0EVT_SHOW_SETTEMP\0EVT_TIMEOUT\0EVT_BUT_DOWN\0EVT_BUT_UP\0EVT_BUT_RIGHT\0EVT_BUT_LEFT\0ELSE\0SHOW_TIME\0SHOW_TEMP\0SET_TEMP" );
   return *this;
 }
-

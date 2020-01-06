@@ -7,6 +7,7 @@
 
 #include "TouchCtrl.h"
 #include "MPR121.h"
+#include "LoggerNode.h"
 
 
 HomieSetting<bool> TouchCtrl::printSerial ("PrintTouch", "flag, if to print raw touch data to Serial");
@@ -76,51 +77,81 @@ void TouchCtrl::loop() {
 	static uint32_t next_read = 0;
 	if (millis() > next_read) {
 		readRawInputs();
-		next_read = millis() + 250;
+		next_read = millis() + 125;
 	}
 }
+
 void TouchCtrl::readRawInputs(){
+	static uint8_t count = 0;
 
     if(MPR121.touchStatusChanged()) MPR121.updateTouchData();
     MPR121.updateBaselineData();
     MPR121.updateFilteredData();
 
-	if (serialPrintData) {
-		Serial.printf("Error %x: OORS1: %x\tOORS2: %x\n", MPR121.getError(), MPR121.getRegister(MPR121_OORS1), MPR121.getRegister(MPR121_OORS2));
-		Serial.print("TOUCH: ");
-		for (uint_fast8_t i = 0; i < 13; i++) {          // 13 touch values
-			Serial.print(MPR121.getTouchData(i), DEC);
-			if (i < 12)
-				Serial.print(" ");
-
-		}
-		Serial.println();
-
-		Serial.print("FDAT: ");
-		for (uint_fast8_t i = 0; i < 13; i++) {          // 13 filtered values
-			Serial.print(MPR121.getFilteredData(i), DEC);
-			if (i < 12)
-				Serial.print(" ");
-		}
-		Serial.println();
-
-		Serial.print("BVAL: ");
-		for (uint_fast8_t i = 0; i < 13; i++) {          // 13 baseline values
-			Serial.print(MPR121.getBaselineData(i), DEC);
-			if (i < 12)
-				Serial.print(" ");
-		}
-		Serial.println();
-
-		Serial.print("DIFF: ");
-		for (uint_fast8_t i = 0; i < 13; i++) {          // 13 value pairs
-			Serial.print(MPR121.getBaselineData(i) - MPR121.getFilteredData(i),
-					DEC);
-			if (i < 12)
-				Serial.print(" ");
-		}
-		Serial.println();
-    }
-
+	if (serialPrintData && (count % 4 == 0)) LogTouchDataToSerial();
+	if ((count % 128 == 0) && LN.loglevel(LoggerNode::DEBUG)) LogTouchData();
+	count++;
 }
+
+void TouchCtrl::LogTouchDataToSerial() {
+	Serial.printf("Error %x: OORS1: %x\tOORS2: %x\n", MPR121.getError(),
+			MPR121.getRegister(MPR121_OORS1), MPR121.getRegister(MPR121_OORS2));
+	Serial.print("TOUCH: ");
+	for (uint_fast8_t i = 0; i < 13; i++) {
+		// 13 touch values
+		Serial.print(MPR121.getTouchData(i), DEC);
+		if (i < 12)
+			Serial.print(" ");
+	}
+	Serial.println();
+	Serial.print("FDAT: ");
+	for (uint_fast8_t i = 0; i < 13; i++) {
+		// 13 filtered values
+		Serial.print(MPR121.getFilteredData(i), DEC);
+		if (i < 12)
+			Serial.print(" ");
+	}
+	Serial.println();
+	Serial.print("BVAL: ");
+	for (uint_fast8_t i = 0; i < 13; i++) {
+		// 13 baseline values
+		Serial.print(MPR121.getBaselineData(i), DEC);
+		if (i < 12)
+			Serial.print(" ");
+	}
+	Serial.println();
+	Serial.print("DIFF: ");
+	for (uint_fast8_t i = 0; i < 13; i++) {
+		// 13 value pairs
+		Serial.print(MPR121.getBaselineData(i) - MPR121.getFilteredData(i),
+				DEC);
+		if (i < 12)
+			Serial.print(" ");
+	}
+	Serial.println();
+}
+
+void TouchCtrl::LogTouchData() {
+	String jsstring = "{\n\t\"Error\": ";
+	jsstring += MPR121.getError();
+	jsstring += ",\n\t\"FDAT:\": {";
+	for (uint_fast8_t i = 0; i < 13; i++) {
+		// 13 touch values
+		jsstring += MPR121.getFilteredData(i);
+		;
+		if (i < 12)
+			jsstring += ", ";
+	}
+	jsstring += "},\n\t\"BVAL:\": {";
+	for (uint_fast8_t i = 0; i < 13; i++) {
+		// 13 touch values
+		jsstring += MPR121.getBaselineData(i);
+		;
+		if (i < 12)
+			jsstring += ", ";
+	}
+	jsstring += "}\n}\n";
+	LN.log("Touchdata", LoggerNode::DEBUG, jsstring);
+}
+
 

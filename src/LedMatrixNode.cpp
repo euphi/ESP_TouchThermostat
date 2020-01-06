@@ -17,9 +17,9 @@ LedMatrixNode::LedMatrixNode():
 	color_up(Adafruit_NeoMatrix::Color(255, 0, 0)),
 	color_dn(Adafruit_NeoMatrix::Color(0, 255, 0))
 {
-	advertise("brightness").settable();
-	advertise("color_up").settable();
-	advertise("color_dn").settable();
+	advertise("brightness").setName("led matrix brightness").setDatatype("integer").setFormat("0:255").settable();
+//	advertise("color_up").settable();
+//	advertise("color_dn").settable();
 	matrix.setRotation(3);
 }
 
